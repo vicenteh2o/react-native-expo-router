@@ -5,7 +5,7 @@ const Users = () => {
   const { id } = useLocalSearchParams();
   return (
     <View>
-      <Text>User: {id}</Text>
+      <Text>User Screen: {id}</Text>
     </View>
   );
 };
