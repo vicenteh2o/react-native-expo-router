@@ -162,3 +162,69 @@ app/
    ***
 
    Para más información, consulta la [documentación oficial](https://tanstack.com/query/latest).
+
+   ***
+
+## 📝 Formik + Yup: Validación de formularios en Auth
+
+La pantalla de autenticación (`app/auth/index.tsx`) utiliza [Formik](https://formik.org/) para gestionar el estado y envío del formulario, y [Yup](https://github.com/jquense/yup) para la validación de los campos.
+
+### Implementación
+
+- **Formik** gestiona los valores, errores y el envío del formulario de login.
+- **Yup** define el esquema de validación en `app/auth/schema/validationSchema.ts`:
+
+```ts
+import * as Yup from "yup";
+
+export const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
+```
+
+### Ejemplo de uso en la pantalla Auth
+
+```tsx
+<Formik
+  initialValues={{ email: "", password: "" }}
+  validationSchema={validationSchema}
+  onSubmit={handleLogIn}
+>
+  {({ handleChange, values, handleBlur, errors, handleSubmit }) => (
+    <>
+      <TextInput
+        style={styles.input}
+        placeholder="email"
+        value={values.email}
+        onChangeText={handleChange("email")}
+        onBlur={handleBlur("email")}
+      />
+      {errors.email && <Text style={styles.error}>{errors.email}</Text>}
+      <TextInput
+        style={styles.input}
+        placeholder="password"
+        value={values.password}
+        onChangeText={handleChange("password")}
+        onBlur={handleBlur("password")}
+      />
+      {errors.password && <Text style={styles.error}>{errors.password}</Text>}
+      <TouchableOpacity onPress={handleSubmit}>
+        <Text>Iniciar sesión</Text>
+      </TouchableOpacity>
+    </>
+  )}
+</Formik>
+```
+
+### Beneficios
+
+- Validación automática y mensajes de error personalizados.
+- Manejo sencillo del estado y envío del formulario.
+- Código limpio y escalable para formularios complejos.
+
+---
+
+Para más información, consulta la [documentación de Formik](https://formik.org/) y [Yup](https://github.com/jquense/yup).
