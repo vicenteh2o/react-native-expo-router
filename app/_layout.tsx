@@ -1,20 +1,34 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { router, Stack } from "expo-router";
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
+
+const queryClient = new QueryClient();
 
 const RootLayout = () => {
   const [user, setUser] = useState({ token: "alo" });
 
   useEffect(() => {
     if (!user) {
-      router.replace("/auth");
-    } else {
-      router.replace("/");
+      // react native temp issue: https://github.com/expo/router/issues/740
+      if (Platform.OS === "ios") {
+        setTimeout(() => {
+          router.replace("/auth");
+        }, 1);
+      } else {
+        setImmediate(() => {
+          router.replace("/auth");
+        });
+      }
     }
   }, [user]);
+
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <QueryClientProvider client={queryClient}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </QueryClientProvider>
   );
 };
 
