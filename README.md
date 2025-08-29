@@ -113,3 +113,52 @@ app/
    ***
 
    Para más detalles, consulta la [documentación de Expo Router](https://expo.github.io/router/docs/).
+
+   ***
+
+   ## 🔄 TanStack Query: Queries y Mutations
+
+   Este proyecto utiliza [TanStack Query](https://tanstack.com/query/latest) para gestionar el estado de datos asíncronos (fetch y mutaciones).
+
+   ### Ejemplo de uso
+
+   En `app/(tabs)/index.tsx` se implementa:
+
+   - **Query**: Para obtener la lista de todos (fetchTodos)
+   - **Mutation**: Para agregar un nuevo todo (addTodo)
+
+   #### Query
+
+   ```tsx
+   const { data, isLoading } = useQuery({
+     queryFn: () => fetchTodos(search),
+     queryKey: ["todos", search],
+   });
+   ```
+
+   #### Mutation
+
+   ```tsx
+   const { mutateAsync } = useMutation({
+     mutationFn: addTodo,
+     onSuccess: () => {
+       queryClient.invalidateQueries({ queryKey: ["todos"] });
+     },
+   });
+
+   // Para agregar un todo:
+   await mutateAsync({ title });
+   ```
+
+   #### Servicios
+
+   Los servicios están en `app/shared/services/index.ts`:
+
+   - `fetchTodos(query)`: Simula una petición asíncrona y filtra los todos por título.
+   - `addTodo({ title })`: Simula agregar un nuevo todo.
+
+   TanStack Query gestiona el caché y la actualización automática de los datos tras una mutación.
+
+   ***
+
+   Para más información, consulta la [documentación oficial](https://tanstack.com/query/latest).
