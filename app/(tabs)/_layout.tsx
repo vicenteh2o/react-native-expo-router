@@ -1,8 +1,29 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
+import { useEffect } from "react";
+import { Platform } from "react-native";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const TabsLayout = () => {
+  const user = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (!user.id) {
+      // react native temp issue: https://github.com/expo/router/issues/740
+      if (Platform.OS === "ios") {
+        setTimeout(() => {
+          router.replace("/auth");
+        }, 1);
+      } else {
+        setImmediate(() => {
+          router.replace("/auth");
+        });
+      }
+    }
+  }, [user]);
+
   return (
     <Tabs>
       <Tabs.Screen

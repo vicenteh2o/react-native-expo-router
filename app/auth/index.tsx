@@ -1,5 +1,5 @@
+import { router } from "expo-router";
 import { Formik, FormikHelpers } from "formik";
-import { useState } from "react";
 import {
   ActivityIndicator,
   ScrollView,
@@ -10,22 +10,24 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { User } from "../shared/entities/user";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/userSlice";
 import { validationSchema } from "./schema/validationSchema";
 
 const Auth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const dispatch = useDispatch();
 
   const handleLogIn = (
     values: { email: string; password: string },
     actions: FormikHelpers<{ email: string; password: string }>
   ) => {
     console.log("submit: ", values);
-    setUser({ id: "1", name: "John Doe", email: values.email });
+    dispatch(setUser({ id: "1", name: "John Doe", email: values.email }));
     setTimeout(() => {
       console.log(values);
       actions.setSubmitting(false); // stop loading
       actions.resetForm();
+      router.replace("/(tabs)");
     }, 2000);
   };
 
