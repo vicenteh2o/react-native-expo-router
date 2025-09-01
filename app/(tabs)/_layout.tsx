@@ -30,9 +30,7 @@ const TabsLayout = () => {
         name="index"
         options={{
           headerTitle: "Agrofertil",
-          // add icon to the header
           headerLeft: () => <Entypo name="home" size={24} color="black" />,
-          // justify header title to the start or left
           headerTitleAlign: "left",
           headerStyle: {
             backgroundColor: "lightblue",
@@ -49,6 +47,15 @@ const TabsLayout = () => {
           title: "User Details",
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="appstore-o" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings/index"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="setting" size={size} color={color} />
           ),
         }}
       />
