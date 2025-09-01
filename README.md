@@ -228,3 +228,92 @@ export const validationSchema = Yup.object().shape({
 ---
 
 Para más información, consulta la [documentación de Formik](https://formik.org/) y [Yup](https://github.com/jquense/yup).
+
+---
+
+## 🗂️ Redux Toolkit: Manejo de estado global
+
+Este proyecto utiliza [Redux Toolkit](https://redux-toolkit.js.org/) para manejar el estado global de la aplicación, por ejemplo el usuario autenticado.
+
+### Implementación
+
+- El store se configura en `app/store/index.ts`:
+
+```ts
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./userSlice";
+
+export const store = configureStore({
+  reducer: {
+    user: userReducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+
+- El slice de usuario está en `app/store/userSlice.ts`:
+
+```ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "../shared/entities/user";
+
+const initialState: User = {
+  id: "",
+  name: "",
+  email: "",
+};
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    setUser: (state, action: PayloadAction<User>) => {
+      return { ...state, ...action.payload };
+    },
+    clearUser: (state) => {
+      return initialState;
+    },
+  },
+});
+
+export const { setUser, clearUser } = userSlice.actions;
+export default userSlice.reducer;
+```
+
+- Los hooks personalizados están en `app/store/hooks/index.ts`:
+
+```ts
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../index";
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+```
+
+### Ejemplo de uso en un componente
+
+```tsx
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { setUser, clearUser } from "../store/userSlice";
+
+const dispatch = useAppDispatch();
+const user = useAppSelector((state) => state.user);
+
+// Para actualizar el usuario:
+dispatch(setUser({ id: "1", name: "John Doe", email: "john@example.com" }));
+
+// Para limpiar el usuario:
+dispatch(clearUser());
+```
+
+### Beneficios
+
+- Estado global centralizado y tipado.
+- Integración sencilla con React Native y Expo Router.
+- Código limpio y escalable para manejar múltiples features.
+
+---
+
+Para más información, consulta la [documentación de Redux Toolkit](https://redux-toolkit.js.org/).
