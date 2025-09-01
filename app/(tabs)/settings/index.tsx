@@ -1,12 +1,14 @@
-import { Colors } from "@/app/shared/constant/Colors";
 import { RootState } from "@/app/store";
 import { setTheme } from "@/app/store/themeSlice";
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import { Colors } from "@/app/utils/constant/Colors";
+import { useStyle } from "@/app/utils/styles";
+import { Switch, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const Settings = () => {
   const dispatch = useDispatch();
   const { currentTheme } = useSelector((state: RootState) => state.theme);
+  const styles = useStyle();
 
   const toggleTheme = () => {
     dispatch(
@@ -18,33 +20,16 @@ const Settings = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Settings</Text>
       <TouchableOpacity style={styles.button}>
-        <Text>Dark Mode</Text>
-        <Switch value={currentTheme === "dark"} onValueChange={toggleTheme} />
+        <Text style={styles.subTitle}>Dark Mode</Text>
+        <Switch
+          trackColor={{ false: Colors.gray, true: Colors.btnRight }}
+          ios_backgroundColor={Colors.gray}
+          value={currentTheme === "dark"}
+          onValueChange={toggleTheme}
+        />
       </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: Colors.gray,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginVertical: 10,
-  },
-  button: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: Colors.white,
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-});
 
 export default Settings;
